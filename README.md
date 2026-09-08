@@ -65,3 +65,34 @@ Fotos liegen als JPEG (q82) in `assets/img/`. Logo, Pfeil und Sparkle sind ein
 Inline-SVG-Sprite oben in `index.html`.
 **Offen:** „Term life protection" hat noch kein Foto und zeigt einen Verlauf
 mit dem Hinweis „Foto folgt".
+
+## Veröffentlichen
+
+Liegt auf GitHub Pages: **https://radehaus.github.io/invest-scroll-prototype/**
+Passwort: `allianz` (gilt pro Browser-Tab, `sessionStorage`).
+
+Änderungen gehen live mit:
+
+    git add -A && git commit -m "..." && git push
+
+Der Pages-Build braucht danach ein bis zwei Minuten.
+
+### Was das Passwort ist und was nicht
+
+Es hält zufällige Besucher ab, mehr nicht. GitHub Pages liefert statische
+Dateien aus, es gibt keinen Server, der etwas prüfen könnte: `index.html`,
+das CSS und alle Fotos bleiben per Direkt-URL abrufbar, und das Repo ist
+öffentlich (Pages aus privaten Repos gibt es im Free-Plan nicht). Das
+Passwort liegt als SHA-256-Digest in `assets/js/gate.js` — das hält es nur
+aus dem Blickfeld, ein Wörterbuchangriff hat es sofort.
+
+Falls der Inhalt später wirklich dicht sein muss, gibt es zwei Wege:
+die Seite verschlüsselt ausliefern (AES-GCM, entschlüsselt erst im Browser),
+oder auf einen Hoster mit echtem serverseitigem Schutz wechseln
+(Cloudflare Worker mit Basic Auth, kostenlos).
+
+### Passwort ändern
+
+    printf 'neuespasswort' | shasum -a 256
+
+Den Hash in `assets/js/gate.js` bei `DIGEST` eintragen.
