@@ -13,6 +13,7 @@ keiner von beiden aufblitzt:
 |------------------|------------------------------------------------------------|
 | `/`              | Scroll-Accordion: ein Teaser zur Zeit, gepinnt, federgetrieben |
 | `/?v=open`       | Alle Teaser offen im normalen Fluss, mit mitlaufendem Prompt   |
+| `/?v=open&ai=1`  | AI mode, direkt in die Konversation                            |
 
 Copy, Bilder und Layout liegen nur einmal vor; die Variante schaltet über
 `data-variant` am `<html>` um. `accordion.js` steigt in `open` sofort aus,
@@ -36,6 +37,7 @@ zu jedem Zeitpunkt exakt eine Panelhöhe im Layout, also nie ein Sprung.
 
     assets/js/accordion.js   → die Feder, schreibt --open, --vel, --speed
     assets/js/dock.js        → der mitlaufende Prompt (nur ?v=open)
+    assets/js/chat.js        → AI mode: Übergabe und Antworten (nur ?v=open)
     assets/css/style.css     → was eine gegebene Öffnung aussieht
 
 ### Das Gefühl einstellen
@@ -177,6 +179,46 @@ lassen. Auf dem Verhältnis des Boards gehalten sind es 58 %.
 multiplizieren müssen. Auf dem voreingestellten `add` würden sie sich zu
 einer fast blickdichten Maske vereinigen — also wieder zum harten Rechteck.
 Ein altes Safari verliert damit den Effekt, aber nichts weiter.
+
+### AI mode — die Übergabe
+
+Der eigentliche CTA. Die Bar ist scharf: man tippt, drückt Absenden und landet
+unter dem Navigationspunkt **AI mode** — wo die eigene Frage, in den eigenen
+Worten, schon oben steht und beantwortet wird. Drückt man ab, ohne etwas zu
+tippen, gilt die Frage, die die Bar gerade anbietet; der Platzhalter ist ein
+echtes Angebot, keine Dekoration.
+
+Gebaut ist der **Übergang**, nicht der Chatbot. Überzeugen muss der Moment
+zwischen den beiden Bildschirmen; ob ein echtes Modell die Antwort geschrieben
+hat, prüft eine ganz andere These. Auf GitHub Pages ginge es ohnehin nicht:
+statische Auslieferung, kein Server, der einen API-Schlüssel verstecken könnte.
+Dafür bräuchte es einen kleinen Proxy davor (Cloudflare Worker) — dann aber
+gleich mit echtem Passwortschutz statt des Schaufenster-Passworts.
+
+> **Achtung, Prototyp-Copy.** Sämtliche Antworten in `assets/js/chat.js` sind
+> erfunden und illustrativ. Keine Zahl darin ist durch Produkt oder Compliance
+> gegangen. Vor jeder Vorführung außerhalb des Teams gegenlesen lassen.
+
+Es ist ein View, keine eigene Seite: der Header bleibt stehen, alles darunter
+wird getauscht. So liest es sich, als antworte dieselbe Seite, statt als Sprung
+woandershin. `?v=open&ai=1` ist ein Deep Link, der Zurück-Button funktioniert.
+
+**Wer antwortet auf was.** Eine Frage, die aus einem Abschnitt stammt, bringt
+ihr Thema mit — geraten wird nur bei Freitext. Wichtig dabei: welchen Abschnitt
+man gerade ansieht, entscheidet **nur** `dock.js`, und die Bar veröffentlicht
+das Ergebnis als `data-topic`. Erst hatten Bar und AI mode das getrennt
+gemessen, und prompt stand über einer Kids-Antwort die Stage-Frage.
+
+Freitext wird nach Wortüberschneidung zugeordnet: der Abschnitt beschreibt sich
+über seine eigene Überschrift, Frage und Copy — das braucht keine Pflege, kennt
+aber nur die Wörter, die der Texter zufällig benutzt hat. Niemand tippt
+„children", wenn er seine Tochter meint. Deshalb nennt jedes Thema zusätzlich
+die Handvoll Wörter, die es eindeutig benennen, und die zählen doppelt: eines
+davon genügt. Trifft nichts, sagt die Antwort das und bietet einen Berater an —
+was zugleich der CTA des Schlussabschnitts ist.
+
+Gegen zehn Testfragen geprüft, alle zehn richtig zugeordnet, „what is the
+weather tomorrow" korrekt als *keine* Zuordnung.
 
 ### Wo sie sich zurückzieht
 

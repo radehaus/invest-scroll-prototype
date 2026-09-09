@@ -37,6 +37,7 @@
 
   dock.hidden = false;
   input.placeholder = FALLBACK;
+  dock.dataset.topic = items[0].dataset.topic;
 
   /* ── 1. Stand where the stage's prompt stands, once ───────────────── */
   const GAP = 24;                     // never closer than this to an edge
@@ -64,13 +65,20 @@
   let shown = FALLBACK;
   let timer = null;
 
-  function swap(text) {
+  /* Takes the section, not just its text: the bar also has to publish
+     WHICH section it is currently offering, because AI mode answers the
+     question the bar is showing. Two places measuring that separately is
+     two places to disagree — the question said one thing and the answer
+     came back about another. */
+  function swap(el) {
+    const text = el ? el.dataset.ask : FALLBACK;
     if (text === shown) return;
     shown = text;
     dock.classList.add('is-swapping');
     clearTimeout(timer);              // a fast scroll must not stack fades
     timer = setTimeout(() => {
       input.placeholder = shown;
+      dock.dataset.topic = el ? el.dataset.topic : items[0].dataset.topic;
       dock.classList.remove('is-swapping');
     }, FADE);
   }
@@ -94,7 +102,7 @@
       const dist = Math.abs((r.top + r.bottom) / 2 - mid);
       if (dist < bestDist) { bestDist = dist; best = el; }
     }
-    swap(best ? best.dataset.ask : FALLBACK);
+    swap(best);
   }
 
   /* One read per frame at most: pick() measures every teaser. */

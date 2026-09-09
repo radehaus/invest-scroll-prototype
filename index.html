@@ -68,7 +68,7 @@
 <div class="utility">
   <nav class="utility__nav" aria-label="Sections">
     <a href="#" class="is-active">Allianz Invest</a>
-    <a href="#">AI mode</a>
+    <a href="#" data-ai-mode>AI mode</a>
     <a href="#solutions">Guarantee</a>
     <a href="#solutions">Wealth</a>
     <a href="#solutions">Retirement</a>
@@ -91,7 +91,7 @@
 </header>
 
 <!-- ══ Stage / Hero ════════════════════════════════════════════════════ -->
-<section class="stage" data-ask="I’m 40 — where should I start?">
+<section class="stage" data-topic="start" data-ask="I’m 40 — where should I start?">
   <svg class="stage__watermark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-allianz"/></svg>
   <h1 class="stage__title">
     One platform for all<br>your financial needs.<br>
@@ -121,7 +121,7 @@
     <div class="acc__stage">
       <ul class="acc__list">
 
-        <li class="acc__item" data-ask="How do I take part in the markets without risking my foundation?">
+        <li class="acc__item" data-topic="guarantee" data-ask="How do I take part in the markets without risking my foundation?">
           <h2 class="acc__title">Insurance-based investing</h2>
           <div class="acc__panel">
             <div class="panel">
@@ -141,7 +141,7 @@
           </div>
         </li>
 
-        <li class="acc__item" data-ask="Who manages my portfolio, and how?">
+        <li class="acc__item" data-topic="wealth" data-ask="Who manages my portfolio, and how?">
           <h2 class="acc__title">Wealth management</h2>
           <div class="acc__panel">
             <div class="panel">
@@ -161,7 +161,7 @@
           </div>
         </li>
 
-        <li class="acc__item" data-ask="How much would the state add to my pension?">
+        <li class="acc__item" data-topic="retirement" data-ask="How much would the state add to my pension?">
           <h2 class="acc__title">State-subsidized retirement</h2>
           <div class="acc__panel">
             <div class="panel">
@@ -181,7 +181,7 @@
           </div>
         </li>
 
-        <li class="acc__item" data-ask="How much cover would my family need?">
+        <li class="acc__item" data-topic="protect" data-ask="How much cover would my family need?">
           <h2 class="acc__title">Term life protection</h2>
           <div class="acc__panel">
             <div class="panel">
@@ -201,7 +201,7 @@
           </div>
         </li>
 
-        <li class="acc__item" data-ask="How early should I start saving for my kids?">
+        <li class="acc__item" data-topic="kids" data-ask="How early should I start saving for my kids?">
           <h2 class="acc__title">Saving for your kids</h2>
           <div class="acc__panel">
             <div class="panel">
@@ -265,6 +265,24 @@
   </div>
 </footer>
 
+<!-- ══ AI mode (?v=open&ai=1) ══════════════════════════════════════════
+     Where the prompt hands you off to. The question you actually typed is
+     the first thing on screen, which is the whole point of the handover.
+     ═══════════════════════════════════════════════════════════════════ -->
+<main class="chat" id="ai-mode">
+  <div class="chat__inner">
+    <p class="chat__badge"><svg width="20" height="20" aria-hidden="true"><use href="#i-spark"/></svg>Allianz Invest <span class="is-light">AI mode</span></p>
+    <div class="chat__log" id="chat-log" role="log" aria-live="polite" aria-label="Conversation"></div>
+    <form class="chat__composer" id="chat-composer" role="search">
+      <svg class="chat__icon" width="22" height="22" aria-hidden="true"><use href="#i-spark"/></svg>
+      <input class="chat__input" id="chat-input" type="text" aria-label="Ask a follow-up" placeholder="Ask a follow-up…" autocomplete="off">
+      <button class="chat__go" type="submit" aria-label="Send">
+        <svg width="20" height="20" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+      </button>
+    </form>
+  </div>
+</main>
+
 <!-- ══ Floating prompt (?v=open) ═══════════════════════════════════════
      The stage's prompt, carried on down the page: once the original has
      scrolled away this one rises into its place, and the question inside
@@ -281,5 +299,6 @@
 <script src="assets/js/gate.js"></script>
 <script src="assets/js/accordion.js"></script>
 <script src="assets/js/dock.js"></script>
+<script src="assets/js/chat.js"></script>
 </body>
 </html>
