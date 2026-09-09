@@ -39,6 +39,11 @@
   });
   addEventListener('view', e => mark(e.detail.view === 'chat' ? 'ai' : e.detail.topic));
 
+  /* A deep link into AI mode switches the view while this file is still
+     being parsed, so the opening announcement is made to nobody. Read the
+     state once rather than rely on having been listening. */
+  if (document.documentElement.dataset.view === 'chat') mark('ai');
+
   /* ── Getting there ───────────────────────────────────────────────── */
   const leaveChat = () => dispatchEvent(new CustomEvent('leave-chat'));
 

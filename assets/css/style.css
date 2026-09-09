@@ -494,7 +494,10 @@ ul{margin:0;padding:0;list-style:none}
 .dock__input{
   flex:1;min-width:0;border:0;outline:0;font:inherit;font-size:15px;
   color:var(--ink);background:transparent;
-  transition:opacity .22s ease;
+  /* Slow, and eased at both ends. The question is the one thing on this
+     bar that ever changes, so the change should read as the bar thinking
+     rather than as a flicker. */
+  transition:opacity .34s cubic-bezier(.4,0,.2,1);
 }
 .dock__input::placeholder{ color:#7A8697 }
 /* The question changes on the way out, never mid-read. */
@@ -541,6 +544,14 @@ ul{margin:0;padding:0;list-style:none}
   display:flex;align-items:center;gap:8px;margin:0;flex:none;
   font-size:13px;font-weight:700;color:var(--blue-900);
 }
+.chat__new{
+  margin-left:auto;padding:5px 12px;border:1px solid var(--line);
+  border-radius:999px;background:#fff;cursor:pointer;
+  font:inherit;font-size:12.5px;font-weight:600;color:var(--ink-60);
+  transition:color .18s ease,border-color .18s ease;
+}
+.chat__new:hover{ color:var(--blue-900);border-color:var(--blue-400) }
+.chat__new[hidden]{ display:none }
 .chat__badge svg{ color:var(--blue-600) }
 .chat__badge .is-light{ font-weight:400;color:var(--ink-60) }
 
@@ -551,6 +562,10 @@ ul{margin:0;padding:0;list-style:none}
 }
 
 .msg{
+  /* flex-shrink defaults to 1, and the log is a scrolling flex column —
+     so without this the messages are squeezed until their box is shorter
+     than the text inside it and the words spill out the bottom. */
+  flex:none;
   max-width:min(88%,560px);padding:13px 18px;border-radius:16px;
   font-size:15px;line-height:1.6;
   /* Each message arrives; the answer then writes itself in. */

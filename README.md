@@ -14,6 +14,7 @@ keiner von beiden aufblitzt:
 | `/`              | Scroll-Accordion: ein Teaser zur Zeit, gepinnt, federgetrieben |
 | `/?v=open`       | Alle Teaser offen im normalen Fluss, mit mitlaufendem Prompt   |
 | `/?v=open&ai=1`  | AI mode, direkt in die Konversation                            |
+| `/guarantee.html`| Detailseite Allianz Invest Guarantee                           |
 
 Copy, Bilder und Layout liegen nur einmal vor; die Variante schaltet über
 `data-variant` am `<html>` um. `accordion.js` steigt in `open` sofort aus,
@@ -38,6 +39,8 @@ zu jedem Zeitpunkt exakt eine Panelhöhe im Layout, also nie ein Sprung.
     assets/js/accordion.js   → die Feder, schreibt --open, --vel, --speed
     assets/js/dock.js        → der mitlaufende Prompt (nur ?v=open)
     assets/js/chat.js        → AI mode: Übergabe und Antworten (nur ?v=open)
+    assets/js/nav.js         → Sprünge und „du bist hier" in der Utility-Leiste
+    assets/js/guarantee.js   → Ring und Chart der Detailseite
     assets/css/style.css     → was eine gegebene Öffnung aussieht
 
 ### Das Gefühl einstellen
@@ -220,6 +223,15 @@ was zugleich der CTA des Schlussabschnitts ist.
 Gegen zehn Testfragen geprüft, alle zehn richtig zugeordnet, „what is the
 weather tomorrow" korrekt als *keine* Zuordnung.
 
+### Der Faden bleibt stehen
+
+Fragen, zurückgehen, weiterlesen, mit einer neuen Frage wiederkommen — die
+erste Runde steht dann immer noch über der zweiten. Es ist *ein* Gespräch mit
+*einem* Gegenüber: die eigene Frage verschwunden vorzufinden läse sich als
+vergessen worden, und ein Faden, der sich über mehrere Produkte hinweg
+aufbaut, ist genau das Argument, das die Seite macht. Er überlebt einen Reload
+in `sessionStorage` — pro Tab, wie das Gate. „Start over" ist der Weg heraus.
+
 ### Wo sie sich zurückzieht
 
 Zwei Stellen, an denen die Bar nichts zu suchen hat:
@@ -237,6 +249,55 @@ des Festnagelns wieder aufgeben.
 keinen anderen Ort dafür gab. Das tut jetzt die Bar darüber, und zwar mit
 denselben Sätzen — zwei Stimmen, die sich über einem Foto wiederholen. In der
 Accordion-Version bleiben sie, dort gibt es die Bar nicht.
+
+## Die Detailseite (`guarantee.html`)
+
+Aus dem Board, Node `4120:5119`. Teilt sich `style.css` mit der Startseite für
+Header, Footer, Buttons und den Schlussabschnitt; alles Seiteneigene liegt in
+`assets/css/guarantee.css`. Der Weg hinein ist „Learn More" im
+Guarantee-Teaser, der Weg zurück sind Logo und „Allianz Invest".
+
+Header und Footer sind **dupliziert**, nicht geteilt: die README verspricht
+keinen Build-Schritt, es gibt also nichts, womit man ein Partial einbinden
+könnte. Zwei Kopien, die man synchron halten muss — der Preis dieses
+Versprechens.
+
+### Ring und Chart
+
+Beide sind gezeichnet statt fotografiert, weil beide die Antwort auf eine
+Rechnung sind, die die Seite schon in Worten aufgemacht hat — und ein Bild von
+einer Zahl veraltet. Die Regler sind aus demselben Grund lebendig: sobald die
+Zeichnung existiert, kostet das nichts, und ein Regler, der sich nicht rührt,
+liest sich als kaputt.
+
+Das Modell, vollständig:
+
+> Um `G` der Einzahlungen zum Termin in `T` Jahren zu garantieren, muss die
+> Sicherungskomponente heute so viel halten, dass es bei ihrem Zins `s` bis
+> dahin auf `G` wächst. Ihr Anteil ist also `G / (1 + s)^T`, der Rest darf in
+> den Markt. Ein längerer Horizont braucht weniger Rücklage — deshalb öffnet
+> sich der Ring, wenn man den Termin nach hinten schiebt.
+
+Bei 80 % und 20 Jahren ergibt das 33 / 67; das Board zeigt 35 / 65. Die
+Differenz ist Rundung, nicht Methode.
+
+> **Achtung, Prototyp-Zahlen.** 4,5 % p.a. auf die Sicherung und 10 / 4,5 /
+> 1,5 % p.a. auf die Rendite sind gesetzt, damit die Kurven ungefähr auf den
+> Endwerten des Boards landen. Nichts davon ist eine Prognose oder durch
+> Compliance gegangen. Steht auch als Fußnote unter der Chart.
+
+Die Szenariofarben stammen aus dem Board (`#5FCD8A` / `#007AB3` / `#A6276F`)
+und sind gegen den Palette-Validator geprüft: Helligkeitsband, Chroma,
+Farbfehlsichtigkeit und Normalsicht bestehen. Einzig das Grün liegt unter 3:1
+Kontrast auf Weiß und darf seine Identität deshalb nicht allein aus der Farbe
+beziehen — das leisten die direkt beschrifteten Endwert-Chips, die das Board
+ohnehin vorsieht.
+
+**Zwei Tippfehler des Boards sind korrigiert:** „Chose your guarantee date" →
+„Choose", und „institutiional nvestor" → „institutional investor". Die Chart
+des Boards ist außerdem in sich widersprüchlich — die Achse läuft über 20
+Jahre, das Formular sagt 10, und die Einzahlungssumme passt zur 10. Hier ist
+der Horizont durchgehend der Wert aus dem Formular.
 
 ## Barrierefreiheit
 

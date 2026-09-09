@@ -12,6 +12,14 @@
    is matched to the section it sounds most like — a canned reply that is
    at least about the right product reads far better than a generic one,
    and when nothing matches it says so and offers a person.
+
+   The thread is kept. Ask about the guarantee, go back and read on, then
+   return with a question about school fees — and the first exchange is
+   still above the second. It is one conversation with one counterpart:
+   finding your own question gone would read as having been forgotten,
+   and a thread accumulating across products is the argument this page is
+   making in the first place. It survives a reload in sessionStorage,
+   which is per tab, exactly like the gate. "Start over" is the way out.
    ═══════════════════════════════════════════════════════════════════════ */
 (() => {
   if (document.documentElement.dataset.variant !== 'open') return;
@@ -20,6 +28,7 @@
   const log      = document.getElementById('chat-log');
   const composer = document.getElementById('chat-composer');
   const input    = document.getElementById('chat-input');
+  const newBtn   = document.getElementById('chat-new');
   const dock     = document.querySelector('.dock');
   const navLink  = document.querySelector('[data-ai-mode]');
   if (!view || !log || !composer || !dock) return;
@@ -98,7 +107,9 @@
     kids:       'kid kids child children daughter son grandchild grandchildren baby birth school university',
   };
 
-  const topics = [...document.querySelectorAll('[data-topic]')].map(el => ({
+  const SECTION = '[data-ask][data-topic]';   // not the nav links, which
+                                              // carry a topic and no ask
+  const topics = [...document.querySelectorAll(SECTION)].map(el => ({
     topic: el.dataset.topic,
     terms: new Set(words([el.dataset.ask, el.textContent].join(' '))),
     strong: new Set(STRONG[el.dataset.topic].split(' ')),
@@ -130,6 +141,32 @@
     return el;
   }
 
+  /* ── Keeping the thread ──────────────────────────────────────────── */
+  const KEY = 'ai-thread';
+  let thread = [];
+  try { thread = JSON.parse(sessionStorage.getItem(KEY)) || []; } catch (e) { thread = []; }
+
+  const save = () => {
+    try { sessionStorage.setItem(KEY, JSON.stringify(thread)); } catch (e) {}
+    if (newBtn) newBtn.hidden = !thread.length;
+  };
+
+  function restore() {
+    log.replaceChildren();
+    for (const m of thread) bubble(m.who, m.text);
+    /* You come back to where you left off, which is the bottom — but only
+       once it has been laid out and there is a bottom to go to. */
+    requestAnimationFrame(() => { log.scrollTop = log.scrollHeight; });
+    if (newBtn) newBtn.hidden = !thread.length;
+  }
+
+  if (newBtn) newBtn.addEventListener('click', () => {
+    thread = [];
+    save();
+    log.replaceChildren();
+    input.focus();
+  });
+
   function type(el, text) {
     if (still) { el.textContent = text; return; }
     const parts = text.split(' ');
@@ -149,6 +186,7 @@
   function answer(question, topic) {
     const t    = topic || classify(question);
     const text = t ? ANSWERS[t] : NO_MATCH;
+    thread.push({ who: 'ai', text }); save();
     const el    = bubble('ai');
     el.classList.add('is-thinking');
     el.innerHTML = '<i></i><i></i><i></i>';
@@ -160,6 +198,7 @@
   }
 
   function ask(question, topic) {
+    thread.push({ who: 'me', text: question }); save();
     bubble('me', question);
     answer(question, topic);
   }
@@ -232,18 +271,21 @@
     e.preventDefault();
     const t = dock.dataset.topic || 'start';
     show(true);
-    if (!log.children.length) ask(askOf(t), t);
+    if (!thread.length) ask(askOf(t), t);
   });
 
-  const askOf = t => document.querySelector('[data-topic="' + t + '"]').dataset.ask;
+  const askOf = t => document.querySelector('[data-ask][data-topic="' + t + '"]').dataset.ask;
 
   addEventListener('popstate', () => {
     new URLSearchParams(location.search).get('ai') ? show(false) : hide();
   });
 
-  /* Deep link: ?v=open&ai=1 opens straight into the conversation. */
+  restore();
+
+  /* Deep link: ?v=open&ai=1 opens straight into the conversation — into
+     the one already going, if there is one. */
   if (new URLSearchParams(location.search).get('ai')) {
     show(false);
-    ask(askOf('start'), 'start');
+    if (!thread.length) ask(askOf('start'), 'start');
   }
 })();

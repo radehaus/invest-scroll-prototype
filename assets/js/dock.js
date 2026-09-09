@@ -61,21 +61,31 @@
   addEventListener('resize', place);
 
   /* ── 2. Carry the nearest teaser's question ──────────────────────── */
-  const FADE = 220;                   // must match .dock__input's transition
+  const FADE  = 340;                  // must match .dock__input's transition
+  const SETTLE = 140;                 // how long a section must hold the floor
   let shown = FALLBACK;
   let timer = null;
+  let hold  = null;
 
   /* Takes the section, not just its text: the bar also has to publish
      WHICH section it is currently offering, because AI mode answers the
      question the bar is showing. Two places measuring that separately is
      two places to disagree — the question said one thing and the answer
      came back about another. */
+  /* Scrolling briskly past two sections should not fade twice. The bar
+     waits for the page to settle on one before it starts changing, so a
+     section you merely passed through never gets a turn. */
   function swap(el) {
     const text = el ? el.dataset.ask : FALLBACK;
+    clearTimeout(hold);
     if (text === shown) return;
+    hold = setTimeout(() => commit(el, text), SETTLE);
+  }
+
+  function commit(el, text) {
     shown = text;
     dock.classList.add('is-swapping');
-    clearTimeout(timer);              // a fast scroll must not stack fades
+    clearTimeout(timer);
     timer = setTimeout(() => {
       input.placeholder = shown;
       dock.dataset.topic = el ? el.dataset.topic : items[0].dataset.topic;

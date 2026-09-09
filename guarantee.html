@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Allianz Invest Guarantee — Safe investing with more than interest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/guarantee.css">
+<!-- Gate: locks the page before first paint, so nothing flashes up. -->
+<script>if(sessionStorage.getItem('ai-unlocked')!=='yes')document.documentElement.classList.add('locked');</script>
+<style>
+  #gate{display:none}
+  .locked #gate{display:grid}
+  .locked body>*:not(#gate){display:none!important}
+</style>
+</head>
+<body>
+
+<!-- ══ Password gate ═══════════════════════════════════════════════════ -->
+<div id="gate">
+  <form class="gate__card" id="gate-form" autocomplete="off">
+    <p class="gate__logo">
+      <span class="logo__word">Allianz</span>
+      <svg width="24" height="24" aria-hidden="true" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="2"/>
+        <rect x="7" y="9" width="2.2" height="9" fill="currentColor"/>
+        <rect x="10.9" y="6" width="2.2" height="12" fill="currentColor"/>
+        <rect x="14.8" y="9" width="2.2" height="9" fill="currentColor"/>
+      </svg>
+      <span class="logo__word logo__word--light">In<span class="logo__v">v</span>est</span>
+    </p>
+    <p class="gate__hint">Prototype — please enter the password.</p>
+    <input class="gate__input" id="gate-input" type="password" placeholder="Password" aria-label="Password" autofocus>
+    <button class="btn btn--primary gate__btn" type="submit">Enter</button>
+    <p class="gate__error" id="gate-error" hidden>Not quite — try again.</p>
+  </form>
+</div>
+
+<!-- ══ SVG sprite ══════════════════════════════════════════════════════ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-allianz" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="2"/>
+    <rect x="7"  y="9"  width="2.2" height="9" fill="currentColor"/>
+    <rect x="10.9" y="6" width="2.2" height="12" fill="currentColor"/>
+    <rect x="14.8" y="9" width="2.2" height="9" fill="currentColor"/>
+  </symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24">
+    <path d="M11 2.5c.3 3.9 2.6 6.2 6.5 6.5-3.9.3-6.2 2.6-6.5 6.5-.3-3.9-2.6-6.2-6.5-6.5 3.9-.3 6.2-2.6 6.5-6.5Z" fill="currentColor"/>
+    <path d="M18.5 14c.15 2 1.35 3.2 3.35 3.35-2 .15-3.2 1.35-3.35 3.35-.15-2-1.35-3.2-3.35-3.35 2-.15 3.2-1.35 3.35-3.35Z" fill="currentColor" opacity=".85"/>
+  </symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24">
+    <path d="M4 12h14M18 12l-5.5-5.5M18 12l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <!-- Exported from the board, node 4120:5197. -->
+  <symbol id="i-check" viewBox="0 0 24 24">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M17.564 9.065L10.564 16.065C10.4898 16.1396 10.4016 16.1988 10.3045 16.2393C10.2074 16.2797 10.1032 16.3005 9.998 16.3005C9.89279 16.3005 9.78862 16.2797 9.69149 16.2393C9.59435 16.1988 9.50616 16.1396 9.432 16.065L6.436 13.068C6.2923 12.9168 6.21338 12.7154 6.21605 12.5067C6.21872 12.2981 6.30278 12.0988 6.4503 11.9513C6.59782 11.8038 6.79713 11.7197 7.00574 11.717C7.21435 11.7144 7.41575 11.7933 7.567 11.937L9.998 14.368L16.433 7.934C16.5849 7.79373 16.7851 7.71769 16.9918 7.72184C17.1985 7.72599 17.3956 7.80999 17.5417 7.95624C17.6879 8.1025 17.7717 8.29964 17.7757 8.50634C17.7796 8.71304 17.7044 8.91325 17.564 9.065ZM12.002 1C5.925 1 1 5.924 1 12C1 18.075 5.924 23 12 23C18.075 23 23 18.075 23 12C23 5.924 18.075 1 12 1" fill="currentColor"/>
+  </symbol>
+</svg>
+
+<!-- ══ Header ══════════════════════════════════════════════════════════
+     Duplicated from index.html rather than shared: the README promises no
+     build step, so there is nothing to include a partial with. Two copies
+     to keep in step — the price of that promise.
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="utility">
+  <nav class="utility__nav" aria-label="Sections">
+    <a href="index.html?v=open" data-topic="start">Allianz Invest</a>
+    <a href="index.html?v=open&amp;ai=1" data-ai-mode>AI mode</a>
+    <a href="guarantee.html" data-topic="guarantee" class="is-active" aria-current="page">Guarantee</a>
+    <a href="index.html?v=open#wealth"     data-topic="wealth">Wealth</a>
+    <a href="index.html?v=open#retirement" data-topic="retirement">Retirement</a>
+    <a href="index.html?v=open#protect"    data-topic="protect">Protect</a>
+    <a href="index.html?v=open#kids"       data-topic="kids">Kids</a>
+  </nav>
+  <div class="utility__lang"><a href="#" class="is-active">EN</a><span>|</span><a href="#">NL</a></div>
+</div>
+
+<header class="masthead">
+  <a class="logo" href="index.html?v=open">
+    <span class="logo__word">Allianz</span>
+    <svg class="logo__mark" width="26" height="26" aria-hidden="true"><use href="#i-allianz"/></svg>
+    <span class="logo__word logo__word--light">In<span class="logo__v">v</span>est</span>
+  </a>
+  <div class="masthead__actions">
+    <a class="btn btn--ghost" href="#">Login</a>
+    <a class="btn btn--primary" href="#">Open Account</a>
+  </div>
+</header>
+
+<!-- ══ Hero ════════════════════════════════════════════════════════════ -->
+<section class="gh">
+  <div class="gh__media">
+    <img src="assets/img/lighthouse.jpg" alt="Lighthouse in heavy seas" fetchpriority="high">
+  </div>
+  <div class="gh__copy">
+    <h1 class="gh__title">Safe investing<br>with more<br>than interest.</h1>
+    <p class="gh__lead">Take part in the markets without putting your foundation at risk with Allianz Invest Guarantee.</p>
+  </div>
+  <span class="bubble bubble--a"><svg width="18" height="18" aria-hidden="true"><use href="#i-spark"/></svg>How does the guarantee work?</span>
+  <span class="bubble bubble--b"><svg width="18" height="18" aria-hidden="true"><use href="#i-spark"/></svg>What happens to my money if the markets fall?</span>
+</section>
+
+<!-- ══ Ask ═════════════════════════════════════════════════════════════ -->
+<section class="gask">
+  <form class="gask__bar" role="search" action="index.html" method="get">
+    <input type="hidden" name="v" value="open">
+    <input type="hidden" name="ai" value="1">
+    <svg class="gask__icon" width="26" height="26" aria-hidden="true"><use href="#i-spark"/></svg>
+    <input class="gask__input" name="q" type="text" aria-label="Ask about Allianz Invest Guarantee" placeholder="How does the guarantee work?">
+    <button class="gask__go" type="submit" aria-label="Start the conversation">
+      <svg width="20" height="20" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+    </button>
+  </form>
+</section>
+
+<!-- ══ Why ═════════════════════════════════════════════════════════════ -->
+<section class="gwhy">
+  <h2 class="g-title g-title--grad">Why Allianz Invest<br>Guarantee?</h2>
+  <div class="gwhy__grid">
+    <figure class="gwhy__shot">
+      <img src="assets/img/app-mockup.jpg" alt="The Allianz Invest app showing a portfolio overview" loading="lazy">
+    </figure>
+    <ul class="gwhy__list">
+      <li><svg width="24" height="24" aria-hidden="true"><use href="#i-check"/></svg>Security component with an attractive interest rate of 4.5% p.a. on your contributions</li>
+      <li><svg width="24" height="24" aria-hidden="true"><use href="#i-check"/></svg>Return component with ETFs and mutual funds at institutional investor terms</li>
+      <li><svg width="24" height="24" aria-hidden="true"><use href="#i-check"/></svg>Online deposits and withdrawals at any time free of charge</li>
+      <li><svg width="24" height="24" aria-hidden="true"><use href="#i-check"/></svg>Tax advantages of a pension insurance policy</li>
+      <li><svg width="24" height="24" aria-hidden="true"><use href="#i-check"/></svg>100% digital and therefore low cost</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══ Choose a guarantee ══════════════════════════════════════════════ -->
+<section class="gsplit">
+  <h2 class="g-title g-title--grad">Choose a guarantee<br>for your investment</h2>
+  <p class="g-lead">When you start with Allianz Invest Guarantee, you choose an individual guarantee of 60%, 80% or 90% of your deposits as at the guarantee date you select. Based on the level of this guarantee and the time remaining until the guarantee date, your deposits are split across two components.</p>
+
+  <div class="seg" role="radiogroup" aria-label="Guarantee level">
+    <button type="button" role="radio" aria-checked="false" data-level="60">60%</button>
+    <button type="button" role="radio" aria-checked="true"  data-level="80" class="is-on">80%</button>
+    <button type="button" role="radio" aria-checked="false" data-level="90">90%</button>
+  </div>
+
+  <div class="gsplit__ring">
+    <p class="gsplit__side gsplit__side--sec">
+      <b id="sec-pct">35%</b>
+      <span>Security component</span>
+      <em>Deposits currently earn interest of 4.5% p.a.</em>
+    </p>
+    <svg class="ring" viewBox="0 0 200 200" role="img" aria-labelledby="ring-desc">
+      <title id="ring-desc">Split of your deposits between the two components</title>
+      <circle class="ring__sec" cx="100" cy="100" r="86" pathLength="100"/>
+      <circle class="ring__ret" cx="100" cy="100" r="86" pathLength="100"/>
+    </svg>
+    <p class="gsplit__side gsplit__side--ret">
+      <b id="ret-pct">65%</b>
+      <span>Return component</span>
+      <em>Selected ETFs and mutual funds</em>
+    </p>
+  </div>
+
+  <div class="gsplit__years">
+    <label for="years">Choose your guarantee date</label>
+    <input id="years" type="range" min="1" max="40" step="1" value="20">
+    <ul class="gsplit__ticks" aria-hidden="true"><li>0</li><li>10</li><li>20</li><li>30</li><li>40</li></ul>
+    <p class="gsplit__readout"><output for="years" id="years-out">20 years</output> until the guarantee date</p>
+  </div>
+</section>
+
+<!-- ══ Strategy ════════════════════════════════════════════════════════ -->
+<section class="gstrat">
+  <div class="gstrat__inner">
+    <h2 class="g-title g-title--left">Choose your investment strategy</h2>
+    <p class="g-lead g-lead--left">Within the Allvest return component you can choose between the passive and the active investment strategy. Whichever you decide on, both are optimised by Allianz experts, including on costs. You always benefit from Allianz's preferential terms as an institutional investor.</p>
+    <div class="gstrat__cards">
+      <article class="gcard">
+        <h3>Passive investment strategy</h3>
+        <p>With the passive strategy, the experts at Allianz Investment Management aim to track the global capital markets with ETFs and index funds and thereby achieve an attractive return.</p>
+        <a class="textlink" href="#">Learn more</a>
+      </article>
+      <article class="gcard">
+        <h3>Active investment strategy</h3>
+        <p>With the active strategy, the experts at Allianz Global Investors aim to achieve an excess return over general market performance using investment funds.</p>
+        <a class="textlink" href="#">Learn more</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══ Simulator ═══════════════════════════════════════════════════════ -->
+<section class="gsim">
+  <h2 class="g-title g-title--grad">Simulate your investment.</h2>
+  <div class="gsim__grid">
+    <form class="gsim__form" id="sim-form" onsubmit="return false">
+      <p class="gfield">
+        <label for="sim-guarantee">Guarantee</label>
+        <select id="sim-guarantee">
+          <option value="60">60 %</option>
+          <option value="80" selected>80 %</option>
+          <option value="90">90 %</option>
+        </select>
+      </p>
+      <p class="gfield gfield--slider">
+        <label for="sim-first">First deposit</label>
+        <span class="gfield__row">
+          <output id="sim-first-out">50.000</output><i>€</i>
+          <input id="sim-first" type="range" min="0" max="100000" step="1000" value="50000">
+        </span>
+      </p>
+      <p class="gfield gfield--slider">
+        <label for="sim-monthly">Monthly deposit</label>
+        <span class="gfield__row">
+          <output id="sim-monthly-out">100</output><i>€</i>
+          <input id="sim-monthly" type="range" min="0" max="1000" step="25" value="100">
+        </span>
+      </p>
+      <p class="gfield gfield--slider">
+        <label for="sim-years">Time remaining until the first guarantee date</label>
+        <span class="gfield__row">
+          <output id="sim-years-out">10</output><i>yrs</i>
+          <input id="sim-years" type="range" min="1" max="40" step="1" value="10">
+        </span>
+      </p>
+    </form>
+
+    <figure class="gsim__chart">
+      <svg id="sim-chart" viewBox="0 0 800 400" preserveAspectRatio="none" role="img" aria-labelledby="sim-desc"></svg>
+      <p class="visually-hidden" id="sim-desc"></p>
+      <ul class="glegend">
+        <li><i style="background:#5FCD8A"></i>Good scenario<b id="lg-good"></b></li>
+        <li><i style="background:#007AB3"></i>Average scenario<b id="lg-avg"></b></li>
+        <li><i style="background:#A6276F"></i>Bad scenario<b id="lg-bad"></b></li>
+        <li><i class="is-dashed"></i>Deposits<b id="lg-dep"></b></li>
+      </ul>
+      <figcaption>Illustrative only. Assumes 4.5% p.a. on the security component and 10% / 4.5% / 1.5% p.a. on the return component. Not a forecast, not an offer.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ══ Interested ══════════════════════════════════════════════════════ -->
+<section class="gcta">
+  <h2 class="g-title g-title--grad">Interested?</h2>
+  <a class="btn btn--primary gcta__btn" href="#">Open Account</a>
+</section>
+
+<!-- ══ People ══════════════════════════════════════════════════════════ -->
+<section class="people">
+  <h2 class="people__title">There is always a person<br>behind the platform.</h2>
+  <div class="cards">
+    <article class="card">
+      <h3>Join a live webinar</h3>
+      <p>Learn how our solutions work in live sessions with Allianz experts, and put your questions to them directly.</p>
+      <a class="btn btn--outline" href="#">Discover upcoming webinars</a>
+    </article>
+    <article class="card">
+      <h3>Questions? Speak to a person</h3>
+      <img class="card__avatars" src="assets/img/avatars.png" alt="" width="128" height="48" loading="lazy">
+      <p>For anything more complex, a named advisor who takes the time your question actually needs, and who already knows what you have told us.</p>
+      <a class="btn btn--outline" href="#">Request a call back</a>
+    </article>
+  </div>
+</section>
+
+<!-- ══ Footer ══════════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <a class="logo" href="index.html?v=open">
+    <span class="logo__word">Allianz</span>
+    <svg class="logo__mark" width="26" height="26" aria-hidden="true"><use href="#i-allianz"/></svg>
+    <span class="logo__word logo__word--light">In<span class="logo__v">v</span>est</span>
+  </a>
+  <div class="footer__links">
+    <a href="#">Guarantee</a><a href="#">Wealth</a><a href="#">Retirement</a>
+    <a href="#">Protect</a><a href="#">Kids</a><a href="#">AI mode</a>
+  </div>
+  <div class="footer__news">
+    <p>Stay up to date</p>
+    <form onsubmit="return false"><input type="email" placeholder="E-mail address" aria-label="E-mail address"></form>
+  </div>
+  <div class="footer__bottom">
+    <p>© 2026 Allianz. All rights reserved.</p>
+    <nav aria-label="Legal"><a href="#">Imprint</a><a href="#">Privacy policy</a></nav>
+  </div>
+</footer>
+
+<script src="assets/js/gate.js"></script>
+<script src="assets/js/guarantee.js"></script>
+</body>
+</html>
