@@ -22,10 +22,15 @@
   const HYSTERESIS= 0.55;  // how far past the midpoint before it commits
   const DRAG      = 34;    // px the artwork lags behind at full speed
 
+  /* ?v=open stands every teaser open in normal flow — no track to read,
+     no stage to pin, nothing for the spring to carry. */
+  if (document.documentElement.dataset.variant === 'open') return;
+
   const items = [...document.querySelectorAll('.acc__item')];
   const track = document.querySelector('.acc__track');
+  const stage = document.querySelector('.acc__stage');
   const list  = document.querySelector('.acc__list');
-  if (!track || items.length < 2) return;
+  if (!track || !stage || items.length < 2) return;
 
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.documentElement.classList.add('acc-static');
@@ -42,12 +47,19 @@
   let prev   = 0;
 
   /* Scroll → target index. Mirrors a view-timeline's `contain` range:
-     0 when the sticky stage pins, 1 when it unpins.                     */
+     0 when the sticky stage pins, 1 when it unpins.
+
+     The stage does not pin at the top of the window — it pins under the
+     sticky utility bar. Both ends of the range have to be read off the
+     stage itself rather than off innerHeight, or the hand-off between
+     items runs one bar-height late and the last item never quite
+     arrives.                                                            */
   function readScroll() {
     const r = track.getBoundingClientRect();
-    const travel = r.height - innerHeight;
+    const pin = parseFloat(getComputedStyle(stage).top) || 0;
+    const travel = r.height - stage.offsetHeight;
     if (travel <= 0) return;
-    const raw = clamp01(-r.top / travel) * last;
+    const raw = clamp01((pin - r.top) / travel) * last;
 
     /* Hysteresis stops the state flickering on the boundary. Looping
        lets a fast flick hand off through several items at once.        */
@@ -101,7 +113,8 @@
   /* Keyboard + click access to the same state machine. */
   items.forEach((el, i) => el.querySelector('.acc__title').addEventListener('click', () => {
     const r = track.getBoundingClientRect();
-    const travel = r.height - innerHeight;
-    scrollTo({ top: scrollY + r.top + (i / last) * travel, behavior: 'smooth' });
+    const pin = parseFloat(getComputedStyle(stage).top) || 0;
+    const travel = r.height - stage.offsetHeight;
+    scrollTo({ top: scrollY + r.top - pin + (i / last) * travel, behavior: 'smooth' });
   }));
 })();

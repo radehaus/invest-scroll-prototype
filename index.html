@@ -8,6 +8,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
+<!-- Two versions of the same page, chosen before first paint so neither
+     one flashes: the default scroll accordion, and ?v=open — every teaser
+     standing open with the prompt following you down the page. -->
+<script>document.documentElement.dataset.variant =
+  new URLSearchParams(location.search).get('v') === 'open' ? 'open' : 'scroll';</script>
 <!-- Gate: locks the page before first paint, so nothing flashes up. -->
 <script>if(sessionStorage.getItem('ai-unlocked')!=='yes')document.documentElement.classList.add('locked');</script>
 <style>
@@ -54,8 +59,8 @@
     <path d="M11 2.5c.3 3.9 2.6 6.2 6.5 6.5-3.9.3-6.2 2.6-6.5 6.5-.3-3.9-2.6-6.2-6.5-6.5 3.9-.3 6.2-2.6 6.5-6.5Z" fill="currentColor"/>
     <path d="M18.5 14c.15 2 1.35 3.2 3.35 3.35-2 .15-3.2 1.35-3.35 3.35-.15-2-1.35-3.2-3.35-3.35 2-.15 3.2-1.35 3.35-3.35Z" fill="currentColor" opacity=".85"/>
   </symbol>
-  <symbol id="i-arrow-up" viewBox="0 0 24 24">
-    <path d="M12 20V5M12 5l-6 6M12 5l6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24">
+    <path d="M4 12h14M18 12l-5.5-5.5M18 12l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
   </symbol>
 </svg>
 
@@ -86,7 +91,7 @@
 </header>
 
 <!-- ══ Stage / Hero ════════════════════════════════════════════════════ -->
-<section class="stage">
+<section class="stage" data-ask="I’m 40 — where should I start?">
   <svg class="stage__watermark" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-allianz"/></svg>
   <h1 class="stage__title">
     One platform for all<br>your financial needs.<br>
@@ -95,6 +100,9 @@
   <form class="prompt" role="search" onsubmit="return false">
     <svg class="prompt__icon" width="22" height="22" aria-hidden="true"><use href="#i-spark"/></svg>
     <input class="prompt__input" type="text" placeholder="I’d like to stop working at 60 without cutting back?" aria-label="What is your goal?">
+    <button class="prompt__go" type="submit" aria-label="Start the conversation">
+      <svg width="20" height="20" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+    </button>
   </form>
 </section>
 
@@ -113,8 +121,8 @@
     <div class="acc__stage">
       <ul class="acc__list">
 
-        <li class="acc__item">
-          <h2 class="acc__title">Insurance-based investing<svg class="acc__arrow" width="24" height="24" aria-hidden="true"><use href="#i-arrow-up"/></svg></h2>
+        <li class="acc__item" data-ask="How do I take part in the markets without risking my foundation?">
+          <h2 class="acc__title">Insurance-based investing</h2>
           <div class="acc__panel">
             <div class="panel">
               <div class="panel__copy">
@@ -133,8 +141,8 @@
           </div>
         </li>
 
-        <li class="acc__item">
-          <h2 class="acc__title">Wealth management<svg class="acc__arrow" width="24" height="24" aria-hidden="true"><use href="#i-arrow-up"/></svg></h2>
+        <li class="acc__item" data-ask="Who manages my portfolio, and how?">
+          <h2 class="acc__title">Wealth management</h2>
           <div class="acc__panel">
             <div class="panel">
               <div class="panel__copy">
@@ -153,8 +161,8 @@
           </div>
         </li>
 
-        <li class="acc__item">
-          <h2 class="acc__title">State-subsidized retirement<svg class="acc__arrow" width="24" height="24" aria-hidden="true"><use href="#i-arrow-up"/></svg></h2>
+        <li class="acc__item" data-ask="How much would the state add to my pension?">
+          <h2 class="acc__title">State-subsidized retirement</h2>
           <div class="acc__panel">
             <div class="panel">
               <div class="panel__copy">
@@ -165,7 +173,7 @@
                 <a class="btn btn--primary" href="#">Learn More</a>
               </div>
               <div class="panel__media">
-                <img src="assets/img/hills.jpg" alt="Rolling hills at sunset" loading="lazy">
+                <img src="assets/img/beach.jpg" alt="An older couple walking a wide beach at dusk" loading="lazy">
                 <span class="bubble bubble--a"><svg width="18" height="18" aria-hidden="true"><use href="#i-spark"/></svg>How much does the state add?</span>
                 <span class="bubble bubble--b"><svg width="18" height="18" aria-hidden="true"><use href="#i-spark"/></svg>When can I start drawing it?</span>
               </div>
@@ -173,8 +181,8 @@
           </div>
         </li>
 
-        <li class="acc__item">
-          <h2 class="acc__title">Term life protection<svg class="acc__arrow" width="24" height="24" aria-hidden="true"><use href="#i-arrow-up"/></svg></h2>
+        <li class="acc__item" data-ask="How much cover would my family need?">
+          <h2 class="acc__title">Term life protection</h2>
           <div class="acc__panel">
             <div class="panel">
               <div class="panel__copy">
@@ -184,7 +192,8 @@
                 <p class="panel__note">Straightforward term cover, priced transparently, adjustable when your life changes.</p>
                 <a class="btn btn--primary" href="#">Learn More</a>
               </div>
-              <div class="panel__media panel__media--placeholder" data-note="Foto folgt">
+              <div class="panel__media">
+                <img src="assets/img/paraglider.jpg" alt="A paraglider over wooded hills at sunset" loading="lazy">
                 <span class="bubble bubble--a"><svg width="18" height="18" aria-hidden="true"><use href="#i-spark"/></svg>How much cover do I need?</span>
                 <span class="bubble bubble--b"><svg width="18" height="18" aria-hidden="true"><use href="#i-spark"/></svg>What does it cost per month?</span>
               </div>
@@ -192,8 +201,8 @@
           </div>
         </li>
 
-        <li class="acc__item">
-          <h2 class="acc__title">Saving for your kids<svg class="acc__arrow" width="24" height="24" aria-hidden="true"><use href="#i-arrow-up"/></svg></h2>
+        <li class="acc__item" data-ask="How early should I start saving for my kids?">
+          <h2 class="acc__title">Saving for your kids</h2>
           <div class="acc__panel">
             <div class="panel">
               <div class="panel__copy">
@@ -256,7 +265,21 @@
   </div>
 </footer>
 
+<!-- ══ Floating prompt (?v=open) ═══════════════════════════════════════
+     The stage's prompt, carried on down the page: once the original has
+     scrolled away this one rises into its place, and the question inside
+     it follows whichever teaser you are actually looking at.
+     ═══════════════════════════════════════════════════════════════════ -->
+<form class="dock" role="search" aria-label="Ask Allianz Invest" onsubmit="return false" hidden>
+  <svg class="dock__icon" width="22" height="22" aria-hidden="true"><use href="#i-spark"/></svg>
+  <input class="dock__input" type="text" aria-label="What is your goal?">
+  <button class="dock__go" type="submit" aria-label="Start the conversation">
+    <svg width="20" height="20" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+  </button>
+</form>
+
 <script src="assets/js/gate.js"></script>
 <script src="assets/js/accordion.js"></script>
+<script src="assets/js/dock.js"></script>
 </body>
 </html>

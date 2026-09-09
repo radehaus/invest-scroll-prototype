@@ -17,26 +17,40 @@
 
   --font: 'Allianz Neo','Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
   --wrap: 1160px;
+  --gutter: max(24px, calc((100vw - var(--wrap))/2));   /* the page's margin */
+
+  /* The utility bar stays on screen, so it is permanently subtracted from
+     everything the accordion has to spend. It gives a little of itself
+     back on a flat window rather than taxing the teaser the whole 46px. */
+  --nav-h: clamp(38px, 5.6vh, 46px);
 
   /* Accordion geometry.
      The open panel takes whatever the five row headers leave over, so a
      teaser always fills the screen no matter the viewport.             */
   --rows: 5;
-  --row-h: clamp(40px, 4.9vh, 56px);        /* a closed row             */
-  --row-h-open: clamp(52px, 6.5vh, 74px);   /* the active one, larger   */
-  --fs-row: clamp(21px, 2.25vw, 30px);      /* closed headline          */
-  --fs-row-open: clamp(24px, 2.75vw, 38px); /* active headline          */
+  /* Every size here carries a vh term beside the vw one, and min() takes
+     whichever is scarcer. Without it a wide, flat window sets the copy
+     from its width while the panel gets its height from the viewport:
+     42px headlines in a 255px box, and the button falls off the bottom.
+     The vh coefficients are tuned to reach their cap at ~750px of
+     viewport height, so a normal desktop window is left alone.        */
+  --row-h: clamp(32px, 4.9vh, 56px);        /* a closed row             */
+  --row-h-open: clamp(42px, 6.5vh, 74px);   /* the active one, larger   */
+  --fs-row: clamp(17px, min(2.25vw, 4vh), 30px);      /* closed headline */
+  --fs-row-open: clamp(19px, min(2.75vw, 5vh), 38px); /* active headline */
   /* Exactly one row is open at any time, so the header overhead is a
      constant and the rest of the screen is the teaser's to claim.
      --panel-fill is how much of that rest it actually takes: 1 = edge
      to edge, lower leaves breathing room above and below the stage.   */
   --panel-fill: .92;
-  --panel-h: calc((100svh - 4 * var(--row-h) - var(--row-h-open)) * var(--panel-fill));
+  --panel-h: calc((100svh - var(--nav-h) - 4 * var(--row-h) - var(--row-h-open))
+                  * var(--panel-fill));
   --scroll-per-item: 105vh;                 /* scroll distance per item */
 }
 
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth}
+:target,[id]{scroll-margin-top:var(--nav-h)}
 body{
   margin:0; font-family:var(--font); color:var(--ink);
   background:var(--paper); -webkit-font-smoothing:antialiased;
@@ -69,8 +83,13 @@ ul{margin:0;padding:0;list-style:none}
 
 /* ── Header ──────────────────────────────────────────────────────────── */
 .utility{
+  position:sticky;top:0;z-index:20;
   display:flex;align-items:center;justify-content:space-between;gap:24px;
-  padding:11px max(24px,calc((100vw - var(--wrap))/2));
+  /* A fixed height, not padding: --nav-h is load-bearing for the accordion
+     geometry below, so the bar must actually be that tall. */
+  height:var(--nav-h);
+  padding:0 var(--gutter);
+  background:var(--paper);
   font-size:12.5px;color:var(--ink-60);border-bottom:1px solid var(--line);
 }
 .utility__nav{display:flex;gap:22px;flex-wrap:wrap}
@@ -80,7 +99,7 @@ ul{margin:0;padding:0;list-style:none}
 
 .masthead{
   display:flex;align-items:center;justify-content:space-between;
-  padding:16px max(24px,calc((100vw - var(--wrap))/2));
+  padding:16px var(--gutter);
   background:var(--paper);
 }
 .masthead__actions{display:flex;gap:10px}
@@ -115,6 +134,9 @@ ul{margin:0;padding:0;list-style:none}
   background:transparent;
 }
 .prompt__input::placeholder{color:#7A8697}
+/* Only ?v=open needs it: there the stage's prompt and the floating one are
+   the same control at two moments, so they have to be the same object. */
+.prompt__go{display:none}
 
 /* ── Facts bar ───────────────────────────────────────────────────────── */
 .facts{background:#E3EFF7;padding:18px 24px}
@@ -142,7 +164,7 @@ ul{margin:0;padding:0;list-style:none}
 .acc{ background:var(--paper) }
 .acc__track{ height:calc(var(--rows) * var(--scroll-per-item)) }
 .acc__stage{
-  position:sticky;top:0;height:100svh;
+  position:sticky;top:var(--nav-h);height:calc(100svh - var(--nav-h));
   display:grid;align-content:center;overflow:hidden;
 }
 .acc__list{ width:100%;margin:0 auto; --vel:0px; --speed:0 }
@@ -169,10 +191,6 @@ ul{margin:0;padding:0;list-style:none}
   /* the heading leans into the movement a touch before the panel does */
   translate:0 calc(var(--vel) * .12);
 }
-.acc__arrow{
-  position:absolute;right:clamp(20px,3.4vw,48px);top:50%;translate:0 -50%;
-  color:var(--blue-900);opacity:var(--open);
-}
 
 /* ── Panel: height is a pure function of --open ──────────────────────── */
 .acc__panel{
@@ -183,7 +201,7 @@ ul{margin:0;padding:0;list-style:none}
   display:grid;grid-template-columns:minmax(0,42%) minmax(0,58%);
   gap:clamp(28px,4.5vw,64px);align-items:center;
   height:var(--panel-h);
-  padding-left:max(24px, calc((100vw - var(--wrap))/2));
+  padding-left:var(--gutter);
   padding-block:clamp(10px,1.7vh,24px);
   /* Keep the content centred in the *visible* slot rather than pinned to
      the top of a clipped box: it rides into place instead of being sliced,
@@ -195,14 +213,20 @@ ul{margin:0;padding:0;list-style:none}
   opacity:clamp(0, calc(var(--open) * 3 - 2), 1);
   translate:0 calc(var(--vel) * .3);
 }
+/* The type below is sized from --panel-h, not from the viewport: the box it
+   has to fit in is the only thing that actually constrains it, and it comes
+   with the sticky bar and the row headers already subtracted out. min()
+   against the vw term means width still wins wherever width is the scarcer
+   of the two — which on any normal desktop window it is, so those sizes are
+   unchanged to the pixel.                                              */
 .panel__brand{display:flex;align-items:center;gap:6px;margin:0 0 8px;
-  font-size:clamp(16px,1.35vw,19px);font-weight:700;color:var(--blue-900)}
+  font-size:clamp(14px,min(1.35vw,var(--panel-h) * .055),19px);font-weight:700;color:var(--blue-900)}
 .panel__brand .is-light{font-weight:400}
-.panel__product{margin:0 0 clamp(14px,2.4vh,28px);font-size:clamp(30px,3.3vw,46px);
+.panel__product{margin:0 0 clamp(14px,2.4vh,28px);font-size:clamp(24px,min(3.3vw,var(--panel-h) * .115),46px);
   font-weight:300;color:var(--ink);letter-spacing:-.015em;line-height:1.05}
-.panel__lead{margin:0 0 clamp(12px,1.8vh,20px);font-size:clamp(15.5px,1.2vw,18px);
+.panel__lead{margin:0 0 clamp(12px,1.8vh,20px);font-size:clamp(13.5px,min(1.2vw,var(--panel-h) * .05),18px);
   line-height:1.55;max-width:38ch}
-.panel__note{margin:0 0 clamp(18px,2.6vh,30px);font-size:clamp(12.5px,.95vw,14px);
+.panel__note{margin:0 0 clamp(18px,2.6vh,30px);font-size:clamp(11.5px,min(.95vw,var(--panel-h) * .04),14px);
   line-height:1.6;color:var(--ink-60);max-width:46ch}
 .panel__copy .btn{padding:.78em 1.5em;font-size:14.5px}
 
@@ -223,13 +247,6 @@ ul{margin:0;padding:0;list-style:none}
 }
 /* Layer promotion costs memory, so it lasts only as long as the movement. */
 .acc__list.is-moving .panel__media img{ will-change:translate,filter }
-.panel__media--placeholder{
-  background:linear-gradient(135deg,#E9F1F8 0%,#DCE9F3 45%,#F2F6FA 100%);
-}
-.panel__media--placeholder::after{
-  content:attr(data-note);position:absolute;inset:auto 0 14px;text-align:center;
-  font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#9DB0C4;
-}
 .bubble{
   position:absolute;display:inline-flex;align-items:center;gap:9px;
   padding:10px 20px;border-radius:999px;background:#fff;
@@ -262,7 +279,7 @@ ul{margin:0;padding:0;list-style:none}
 
 /* ── Footer ──────────────────────────────────────────────────────────── */
 .footer{
-  padding:44px max(24px,calc((100vw - var(--wrap))/2)) 34px;
+  padding:44px var(--gutter) 34px;
   background:var(--grey-50);border-top:1px solid var(--line);
 }
 .footer .logo{margin-bottom:28px}
@@ -284,12 +301,32 @@ ul{margin:0;padding:0;list-style:none}
 .footer__bottom nav{display:flex;gap:18px}
 
 /* ── Responsive ──────────────────────────────────────────────────────── */
+/* A flat window has no room to spare: the breathing space above and below
+   the stage is the first thing to give, before the copy has to shrink any
+   further. Above this height --panel-fill stays at its .92. */
+@media (max-height:760px){
+  :root{ --panel-fill: 1 }
+
+  /* 38ch is the right measure when height is free. When it is not, a
+     narrow column spends the one resource that is scarce to save the one
+     that is going begging: the copy column is ~490px wide and the lead
+     was wrapping to four lines inside 266px of it. Letting the measure
+     out to a still-readable 54ch buys back two whole lines. */
+  .panel__lead{ max-width:54ch }
+  .panel__note{ max-width:60ch }
+}
+
 @media (max-width:820px){
+  /* --nav-h is load-bearing, so the bar may not wrap to a second line.
+     It scrolls sideways instead — better than two stacked rows anyway. */
+  .utility__nav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .utility__nav::-webkit-scrollbar{display:none}
+  .utility__nav a{white-space:nowrap}
+
   .panel{grid-template-columns:1fr;gap:14px;align-content:center;
     padding-left:24px;padding-right:24px}
   .panel__media{min-height:34vh;border-radius:3px}
   .bubble{display:none}
-  .acc__arrow{right:10px}
   .footer__links{grid-template-columns:repeat(2,1fr)}
 }
 
@@ -329,3 +366,147 @@ ul{margin:0;padding:0;list-style:none}
 .gate__input:focus{outline:0;border-color:var(--blue-400)}
 .gate__btn{width:100%}
 .gate__error{margin:0;font-size:12.5px;color:var(--orange)}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   VARIANT: every teaser open  (?v=open)
+   ───────────────────────────────────────────────────────────────────────
+   The accordion's whole apparatus — the tall track, the pinned stage, the
+   spring — exists to show one teaser at a time. Here they all stand open
+   in normal flow, so every one of those mechanisms is switched off rather
+   than worked around. Pinning --open to 1 does most of it on its own:
+   the panel's translate, the copy and artwork opacity ramps and the
+   motion blur are all functions of --open and --vel, and they all land on
+   their resting values once those two are fixed.
+   ═══════════════════════════════════════════════════════════════════════ */
+[data-variant="open"]{
+  /* --panel-h is no longer a constraint here — a panel is as tall as its
+     content — but the panel type still reads it to decide whether height
+     or width is the scarcer resource. Handing it a large value means
+     width always wins, which is the original desktop sizing.          */
+  --panel-h: 1000px;
+}
+[data-variant="open"] .acc__track{ height:auto }
+[data-variant="open"] .acc__stage{ position:static;height:auto;overflow:visible }
+[data-variant="open"] .acc__item{ --open:1 }
+[data-variant="open"] .acc__list{ --vel:0px; --speed:0 }
+/* Five full-strength tints in a row would be a wall of grey. */
+[data-variant="open"] .acc__item::before{ opacity:.5 }
+/* Nothing is "active" when everything is open, so nothing is marked as such. */
+[data-variant="open"] .acc__title{
+  height:auto;cursor:default;color:var(--blue-400);
+  padding-block:clamp(46px,7vh,92px) clamp(22px,3.4vh,42px);
+  font-size:clamp(28px,3.6vw,44px);
+}
+[data-variant="open"] .acc__panel{ height:auto;contain:none }
+[data-variant="open"] .panel{
+  height:auto;padding-block:0 clamp(46px,7vh,92px);
+}
+
+/* ── The photo, unboxed ──────────────────────────────────────────────────
+   From the Figma (node 4120:3915). The designer is not masking anything:
+   each edge of the photo carries two overlapping rectangles filled with a
+   gradient from the page background to transparent. Two ramps rather than
+   one is what stops it looking like a ramp — they sum to an ease, fast at
+   the edge and slow as it lands.
+
+   Reproduced here as a mask instead of as overlays, for one reason: an
+   overlay has to be painted in the exact colour of whatever is behind it,
+   and behind these photos is a tinted teaser, not the flat #F4F4F4 of the
+   board. A mask makes the photo genuinely transparent at the edges, so it
+   is right whatever it is lying on.
+
+   The Figma's ramps, as fractions of its 1280 x 688 frame — the shorter of
+   each pair is where the edge finishes arriving:
+
+       left    832 / 586  →  46%      right   302 / 254  →  20%
+       bottom  299 / 233  →  34%      top     171 / 142  →  21%
+
+   The left fade is the whole trick: the picture never has a left edge, it
+   simply stops being there somewhere under the text. So the photo has to
+   span the full panel, copy included.
+
+   The one number not copied straight across is that left one. What the
+   board actually fixes is where the fade lands *relative to the text* —
+   its copy is 33% of the frame and the fade finishes at 46%, so it clears
+   the text by a good half again. Our copy column is wider, 42%, so 46%
+   would finish almost on top of it and leave the small grey note sitting
+   on open photo. Held at the board's ratio it comes out at 58%.       */
+[data-variant="open"] .panel{ position:relative;min-height:clamp(300px,46vh,540px) }
+[data-variant="open"] .panel__copy{ position:relative;z-index:1 }
+[data-variant="open"] .panel__media{
+  position:absolute;inset:0 0 0 calc(-1 * var(--gutter));
+  border-radius:0;min-height:0;
+  --fade:
+    linear-gradient(to right,  transparent 0%, rgba(0,0,0,.68) 29%, #000 58%),
+    linear-gradient(to left,   transparent 0%, rgba(0,0,0,.71) 10%, #000 20%),
+    linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.71) 10%, #000 21%),
+    linear-gradient(to top,    transparent 0%, rgba(0,0,0,.70) 17%, #000 34%);
+  /* Four separate edges, so they must multiply. Left at the default `add`
+     they would union into an almost solid mask — which is simply the hard
+     rectangle again, so an old browser loses the effect but nothing else. */
+  mask-image:var(--fade);
+  mask-composite:intersect;
+  -webkit-mask-image:var(--fade);
+}
+/* The bubbles asked the questions when there was nowhere else to ask them.
+   The bar overhead now does that, and says the same things — so they are
+   two voices repeating each other over one photo. The bar wins. */
+[data-variant="open"] .bubble{ display:none }
+/* Height is not scarce in this version, so the measure goes back to ideal. */
+[data-variant="open"] .panel__lead{ max-width:38ch }
+[data-variant="open"] .panel__note{ max-width:46ch }
+
+/* The stage's prompt is not a second bar — it is the slot the fixed one
+   sits in. It keeps its space in the hero's composition and lends its
+   height to the measurement; the visible bar is always .dock.        */
+[data-variant="open"] .prompt{ padding:9px 9px 9px 22px;visibility:hidden }
+[data-variant="open"] .prompt__go{
+  flex:none;display:grid;place-items:center;
+  width:38px;height:38px;padding:0;border:0;border-radius:999px;
+  background:var(--blue-600);color:#fff;cursor:pointer;
+  transition:background .18s ease;
+}
+[data-variant="open"] .prompt__go:hover{ background:var(--blue-900) }
+
+/* ── The prompt, carried down the page ───────────────────────────────── */
+.dock{
+  /* Fixed from the first frame and never moved again: --dock-top is the
+     position the stage's own prompt occupies at scroll 0, so at rest the
+     two coincide exactly and the page simply scrolls out from under it.
+     There is no hand-off to get wrong because there is no hand-off. */
+  position:fixed;z-index:30;left:50%;top:var(--dock-top,50vh);translate:-50% 0;
+  width:min(620px, calc(100vw - 48px));
+  display:flex;align-items:center;gap:12px;
+  padding:9px 9px 9px 22px;
+  background:#fff;border-radius:999px;
+  box-shadow:0 6px 30px rgba(0,55,129,.18);
+  /* Only ever fades. Moving it would undo the whole point of fixing it. */
+  transition:opacity .3s ease, visibility .3s;
+}
+/* The closing section asks you to call a person. Nothing should be lying
+   over that, and the footer is not a place to start a conversation. */
+.dock.is-gone{ opacity:0;visibility:hidden;pointer-events:none }
+/* display:flex above outranks the browser's own [hidden]{display:none},
+   so the attribute has to be honoured explicitly — without this the bar
+   stands in the scroll version too, empty, on its fallback position. */
+.dock[hidden]{ display:none }
+.dock__icon{ color:var(--blue-600);flex:none }
+.dock__input{
+  flex:1;min-width:0;border:0;outline:0;font:inherit;font-size:15px;
+  color:var(--ink);background:transparent;
+  transition:opacity .22s ease;
+}
+.dock__input::placeholder{ color:#7A8697 }
+/* The question changes on the way out, never mid-read. */
+.dock.is-swapping .dock__input{ opacity:0 }
+.dock__go{
+  flex:none;display:grid;place-items:center;
+  width:38px;height:38px;padding:0;border:0;border-radius:999px;
+  background:var(--blue-600);color:#fff;cursor:pointer;
+  transition:background .18s ease;
+}
+.dock__go:hover{ background:var(--blue-900) }
+
+@media (prefers-reduced-motion:reduce){
+  .dock,.dock__input{ transition:none }
+}
