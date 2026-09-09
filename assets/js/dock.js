@@ -80,6 +80,7 @@
       input.placeholder = shown;
       dock.dataset.topic = el ? el.dataset.topic : items[0].dataset.topic;
       dock.classList.remove('is-swapping');
+      dispatchEvent(new CustomEvent('section', { detail: { topic: dock.dataset.topic } }));
     }, FADE);
   }
 

@@ -67,13 +67,13 @@
 <!-- ══ Header ══════════════════════════════════════════════════════════ -->
 <div class="utility">
   <nav class="utility__nav" aria-label="Sections">
-    <a href="#" class="is-active">Allianz Invest</a>
+    <a href="#top" data-topic="start" class="is-active">Allianz Invest</a>
     <a href="#" data-ai-mode>AI mode</a>
-    <a href="#solutions">Guarantee</a>
-    <a href="#solutions">Wealth</a>
-    <a href="#solutions">Retirement</a>
-    <a href="#solutions">Protect</a>
-    <a href="#solutions">Kids</a>
+    <a href="#guarantee"  data-topic="guarantee">Guarantee</a>
+    <a href="#wealth"     data-topic="wealth">Wealth</a>
+    <a href="#retirement" data-topic="retirement">Retirement</a>
+    <a href="#protect"    data-topic="protect">Protect</a>
+    <a href="#kids"       data-topic="kids">Kids</a>
   </nav>
   <div class="utility__lang"><a href="#" class="is-active">EN</a><span>|</span><a href="#">NL</a></div>
 </div>
@@ -121,7 +121,7 @@
     <div class="acc__stage">
       <ul class="acc__list">
 
-        <li class="acc__item" data-topic="guarantee" data-ask="How do I take part in the markets without risking my foundation?">
+        <li class="acc__item" id="guarantee" data-topic="guarantee" data-ask="How do I take part in the markets without risking my foundation?">
           <h2 class="acc__title">Insurance-based investing</h2>
           <div class="acc__panel">
             <div class="panel">
@@ -141,7 +141,7 @@
           </div>
         </li>
 
-        <li class="acc__item" data-topic="wealth" data-ask="Who manages my portfolio, and how?">
+        <li class="acc__item" id="wealth" data-topic="wealth" data-ask="Who manages my portfolio, and how?">
           <h2 class="acc__title">Wealth management</h2>
           <div class="acc__panel">
             <div class="panel">
@@ -161,7 +161,7 @@
           </div>
         </li>
 
-        <li class="acc__item" data-topic="retirement" data-ask="How much would the state add to my pension?">
+        <li class="acc__item" id="retirement" data-topic="retirement" data-ask="How much would the state add to my pension?">
           <h2 class="acc__title">State-subsidized retirement</h2>
           <div class="acc__panel">
             <div class="panel">
@@ -181,7 +181,7 @@
           </div>
         </li>
 
-        <li class="acc__item" data-topic="protect" data-ask="How much cover would my family need?">
+        <li class="acc__item" id="protect" data-topic="protect" data-ask="How much cover would my family need?">
           <h2 class="acc__title">Term life protection</h2>
           <div class="acc__panel">
             <div class="panel">
@@ -201,7 +201,7 @@
           </div>
         </li>
 
-        <li class="acc__item" data-topic="kids" data-ask="How early should I start saving for my kids?">
+        <li class="acc__item" id="kids" data-topic="kids" data-ask="How early should I start saving for my kids?">
           <h2 class="acc__title">Saving for your kids</h2>
           <div class="acc__panel">
             <div class="panel">
@@ -300,5 +300,6 @@
 <script src="assets/js/accordion.js"></script>
 <script src="assets/js/dock.js"></script>
 <script src="assets/js/chat.js"></script>
+<script src="assets/js/nav.js"></script>
 </body>
 </html>

@@ -176,7 +176,7 @@
 
   function show(push) {
     document.documentElement.dataset.view = 'chat';
-    if (navLink) navLink.classList.add('is-active');
+    dispatchEvent(new CustomEvent('view', { detail: { view: 'chat' } }));
     if (push) {
       const u = new URL(location.href);
       u.searchParams.set('v', 'open');
@@ -189,8 +189,18 @@
 
   function hide() {
     delete document.documentElement.dataset.view;
-    if (navLink) navLink.classList.remove('is-active');
+    dispatchEvent(new CustomEvent('view',
+      { detail: { view: 'page', topic: dock.dataset.topic || 'start' } }));
   }
+
+  /* Any nav link is also a way out of here. */
+  addEventListener('leave-chat', () => {
+    if (document.documentElement.dataset.view !== 'chat') return;
+    hide();
+    const u = new URL(location.href);
+    u.searchParams.delete('ai');
+    history.pushState({}, '', u);
+  });
 
   /* ── Wiring ──────────────────────────────────────────────────────── */
   /* The question the bar is showing is the one the user is looking at, so

@@ -63,8 +63,17 @@
 
     /* Hysteresis stops the state flickering on the boundary. Looping
        lets a fast flick hand off through several items at once.        */
+    const was = target;
     while (raw > target + HYSTERESIS && target < last) target++;
     while (raw < target - HYSTERESIS && target > 0)    target--;
+    if (target !== was) announce();
+  }
+
+  /* The nav underlines whichever section is current; this is the only
+     place that knows which one that is here. */
+  function announce() {
+    dispatchEvent(new CustomEvent('section',
+      { detail: { topic: items[target].dataset.topic } }));
   }
 
   function paint() {
@@ -109,6 +118,7 @@
   addEventListener('resize', wake);
   readScroll();
   paint();
+  announce();
 
   /* Keyboard + click access to the same state machine. */
   items.forEach((el, i) => el.querySelector('.acc__title').addEventListener('click', () => {
