@@ -92,7 +92,10 @@ ul{margin:0;padding:0;list-style:none}
   background:var(--paper);
   font-size:12.5px;color:var(--ink-60);border-bottom:1px solid var(--line);
 }
-.utility__nav{display:flex;gap:22px;flex-wrap:wrap}
+.utility__nav{display:flex;gap:22px;flex-wrap:wrap;align-items:center}
+/* Not built yet. A label rather than a link, so it cannot be clicked and
+   is not in the tab order — there is nothing behind it to reach. */
+.utility__nav .is-soon{color:#A7B0BC;cursor:default;user-select:none}
 .utility__nav a:hover{color:var(--blue-900)}
 .utility a.is-active{color:var(--blue-900);border-bottom:1.5px solid var(--blue-900);padding-bottom:2px}
 .utility__lang{display:flex;gap:8px;align-items:center}
